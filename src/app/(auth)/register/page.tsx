@@ -1,12 +1,17 @@
-"use client"
+"use client";
+// Página de registro donde nuevos usuarios crean su cuenta
+// Se recibe nombre, cédula, email, contraseña y rol (cliente o agente)
+// Los datos se envían al servidor para validar y guardar en MongoDB
+
 import Link from "next/link";
 import React, { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
-import axios from "axios"
-import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useRouter } from  "next/navigation";
 
 export default function RegisterForm() {
 
+  // Estados para cada campo del formulario
   const [name, setname] =useState("");
     const [cc, setcc]= useState("");
   const [email, setemail]= useState("");
@@ -18,16 +23,21 @@ export default function RegisterForm() {
   const handleSubmit = async (e:any) =>{
     e.preventDefault();
 
+    // Yo: Valido que TODOS los campos estén completos antes de enviar.
     if (!name || !email || !cc || !password || !role) {
       toast.error("completa todos los campos")
       return;
     }
     try {
+    // Yo: Hago POST a /api/register con los datos del usuario (nombre, cédula, email, password, rol).
+    // Yo: El servidor valida, encripta la contraseña y guarda el nuevo usuario en MongoDB.
     const res = await axios.post("/api/register",{name,cc,email,password,role})
 
+    // Yo: Si todo sale bien, muestro un mensaje de éxito.
     toast.success("Gracias por registrarte");
       
     if (res){
+      // Yo: Limpio el formulario (borro todos los inputs) y redirijo al usuario a la página de inicio.
       const form = e.target;
       form.reset();
       route.push("/")
@@ -35,6 +45,7 @@ export default function RegisterForm() {
 
     }catch(error){
       console.log(error);
+      // Yo: Si hay error (email duplicado, conexión fallida, etc), muestro un mensaje de error.
       toast.error("Error al registrar usuario");
 
     }

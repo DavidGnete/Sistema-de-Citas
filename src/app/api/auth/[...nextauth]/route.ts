@@ -1,3 +1,5 @@
+// Yo: este archivo configura la forma en que las personas se autentican.
+// Yo: permite login con Google o con email/contraseña y guarda datos en la sesión.
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";

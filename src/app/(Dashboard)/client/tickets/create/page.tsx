@@ -1,4 +1,8 @@
 "use client";
+// Página para crear un nuevo ticket de soporte
+// El cliente completa un formulario con título, descripción y prioridad
+// Al enviar, se crea el ticket en la BD y se envía un email de confirmación
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -9,14 +13,17 @@ export default function CreateTicketPage() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  // Estados del formulario
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
   const [loading, setLoading] = useState(false);
 
+  // Manejo del envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validaciones del lado del cliente
     if (!title.trim()) {
       toast.error("Por favor ingresa un título");
       return;
@@ -40,6 +47,8 @@ export default function CreateTicketPage() {
     try {
       setLoading(true);
 
+      // Envío POST a la API con los datos del ticket
+      // createdBy se obtiene de la sesión del usuario
       const res = await axios.post("/api/tickets", {
         title: title.trim(),
         description: description.trim(),
@@ -47,11 +56,13 @@ export default function CreateTicketPage() {
         createdBy: (session?.user as any)?.id,
       });
 
+      // Si se creó correctamente, muestro mensaje y redirijo
       if (res.data?.ok) {
-        toast.success("Ticket creado exitosamente");
+        toast.success("Ticket creado, envio a tu correo para más detalles");
+        // Espero 3 segundos antes de redirigir para que el usuario vea el mensaje
         setTimeout(() => {
           router.push("/client/tickets");
-        }, 1000);
+        }, 3000);
       } else {
         toast.error(res.data?.message || "Error al crear ticket");
       }
@@ -68,6 +79,7 @@ export default function CreateTicketPage() {
       <h1 className="text-2xl font-bold mb-6">Reportar Nuevo Problema</h1>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-5">
+        {/* Campo de título */}
         <div>
           <label className="block text-sm font-semibold mb-2">
             Título del Problema *
@@ -81,9 +93,11 @@ export default function CreateTicketPage() {
             className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
             required
           />
+          {/* Contador de caracteres */}
           <p className="text-xs text-gray-500 mt-1">{title.length}/100</p>
         </div>
 
+        {/* Campo de descripción */}
         <div>
           <label className="block text-sm font-semibold mb-2">
             Descripción Detallada *
@@ -97,9 +111,11 @@ export default function CreateTicketPage() {
             className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
             required
           />
+          {/* Contador de caracteres */}
           <p className="text-xs text-gray-500 mt-1">{description.length}/1000</p>
         </div>
 
+        {/* Campo de prioridad */}
         <div>
           <label className="block text-sm font-semibold mb-2">Nivel de Prioridad</label>
           <select
@@ -113,6 +129,7 @@ export default function CreateTicketPage() {
           </select>
         </div>
 
+        {/* Botones de acción */}
         <div className="flex gap-3 pt-4">
           <button
             type="submit"

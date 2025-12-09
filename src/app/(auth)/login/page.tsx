@@ -1,5 +1,9 @@
 "use client";
 
+// Página de login donde los usuarios ingresan con email y contraseña
+// Se valida contra la base de datos y se crea una sesión
+// Luego se redirije al dashboard según el rol (agente o cliente)
+
 import { ToastContainer, toast } from 'react-toastify';
 import { signIn, getSession } from "next-auth/react";
 import Link from "next/link";
@@ -7,6 +11,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  // Estados para guardar el email y contraseña del usuario
   const [email, setemail] = useState("");
   const [password, setpasswrod] = useState("");
   const route = useRouter();
@@ -15,7 +20,8 @@ export default function Navbar() {
     e.preventDefault();
 
     try {
-      // ===== 1. Intentar iniciar sesión  =====
+      // Paso 1: Envío las credenciales a NextAuth para validar
+      // redirect: false significa que no redirige automáticamente
       const res = await signIn("credentials", {
         email,
         password,
@@ -27,7 +33,7 @@ export default function Navbar() {
         return;
       }
 
-      // ===== 2. Obtener la sesión actualizada =====
+      // Paso 2: Obtengo la sesión actualizada para ver el rol del usuario
       const session = await getSession();
       const role = (session?.user as any)?.role;
 
@@ -36,7 +42,9 @@ export default function Navbar() {
         return;
       }
 
-      // ===== 3. Redirigir según rol =====
+      // Paso 3: Redirijo según el rol
+      // Si es agente → dashboard del agente
+      // Si es cliente → dashboard del cliente
       if (role === "agent") {
         return route.push("/agent/dashboard");
       }

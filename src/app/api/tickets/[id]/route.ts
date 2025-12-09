@@ -1,5 +1,5 @@
-// GET: obtener ticket por id (incluye creador y asignado).
-// PUT: actualizar campos (status, priority, assignedTo) y devolver el ticket.
+// Yo: aquí puedo ver o actualizar un ticket específico por su id.
+// Yo: GET trae los datos; PUT cambia estado, prioridad o quien está asignado.
 import { NextResponse } from "next/server";
 import { Ticket } from "@/models/ticket";
 import { connectToDatabase } from "@/lib/mongobd";

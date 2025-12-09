@@ -1,3 +1,7 @@
+// Layout para todas las páginas del agente
+// Verifica que el usuario sea agente, de lo contrario redirige al login
+// Muestra navegación con acceso a Dashboard y Tickets
+
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/models/auth";
 import { redirect } from "next/navigation";
@@ -17,21 +21,26 @@ interface DashboardLayoutprops {
 export default async function AgentLayout({
   children,
 }: DashboardLayoutprops) {
+  // Obtengo la sesión del servidor
   const session = (await getServerSession(authOptions as any)) as any;
 
+  // Si no hay sesión, mando al login
   if (!session) return redirect("/login");
 
- const role = session?.user && "role" in session.user
+  // Extraigo el rol del usuario
+  const role = session?.user && "role" in session.user
   ? (session.user as any).role
   : "client";
 
+  // Si no es agente, redirijo fuera
   if (role !== "agent") return redirect("/");
 
+  // El usuario es agente válido, muestro el layout
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Clinica Riwi</h2>
+          <h2 className="text-lg font-bold">Atencion Agentes ClickRiw</h2>
           <nav className="flex gap-6 items-center">
             <Link
               className="text-sm text-blue-600 hover:underline"

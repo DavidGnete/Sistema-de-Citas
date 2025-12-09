@@ -1,8 +1,10 @@
-// GET: listar tickets (filtros: status, priority, userId).
-// POST: crear ticket; valida campos obligatorios y guarda en la base.
+// Yo: este archivo lista tickets y también crea nuevos tickets.
+// Yo: GET devuelve los tickets según filtros. POST guarda un nuevo ticket.
 import { NextResponse } from "next/server";
 import { Ticket } from "@/models/ticket";
 import { connectToDatabase } from "@/lib/mongobd";
+import { newuser } from "@/models/register";
+import { sendTicketCreatedEmail } from "@/lib/mailer";
 
 export async function GET(request: Request) {
   try {
@@ -58,6 +60,24 @@ export async function POST(request: Request) {
       createdBy,
       priority: priority || "medium",
     });
+
+    // Intento obtener el email del usuario desde el modelo `newuser` y enviar el correo.
+    try {
+      const user = await newuser.findById(createdBy).lean();
+      const userEmail = user?.email;
+      if (userEmail) {
+        try {
+          await sendTicketCreatedEmail(userEmail, newTicket);
+          console.log(`Email enviado a ${userEmail}`);
+        } catch (mailError) {
+          console.error("Error enviando email al crear ticket:", mailError);
+        }
+      } else {
+        console.log("No se encontró email del usuario; no se enviará correo.");
+      }
+    } catch (lookupError) {
+      console.error("Error buscando usuario para enviar email:", lookupError);
+    }
 
     return NextResponse.json({ ok: true, ticket: newTicket });
   } catch (error: any) {

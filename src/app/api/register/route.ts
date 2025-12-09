@@ -1,3 +1,5 @@
+// Yo: este archivo recibe los datos cuando alguien se registra.
+// Yo: valido los campos, encripto la contraseña y guardo el usuario.
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { newuser } from "@/models/register";

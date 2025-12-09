@@ -1,4 +1,8 @@
 "use client";
+// Página que muestra la lista de tickets del cliente actual
+// Permite filtrar por estado y muestra cada ticket con su información
+// El cliente puede ver solo sus propios tickets
+
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -7,11 +11,13 @@ import api from "@/services/api";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function ClientTicketsPage() {
+  // Obtengo la sesión del usuario actual
   const { data: session } = useSession();
   const [tickets, setTickets] = useState<any[]>([]);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Función para traer los tickets de la API filtrados
   const fetchTickets = async () => {
     try {
       setLoading(true);
@@ -23,6 +29,7 @@ export default function ClientTicketsPage() {
         return;
       }
 
+      // Preparo los parámetros: userId es obligatorio, status es opcional
       const params: any = { userId };
       if (status) params.status = status;
 
@@ -31,6 +38,7 @@ export default function ClientTicketsPage() {
       
       console.log("API Response:", res.data);
       
+      // Si la API responde OK, seteo los tickets
       if (res.data?.ok) {
         setTickets(res.data.tickets || []);
       } else {
@@ -44,12 +52,14 @@ export default function ClientTicketsPage() {
     }
   };
 
+  // Traigo los tickets cuando la sesión se carga o cuando cambia el filtro
   useEffect(() => {
     if (session?.user) {
       fetchTickets();
     }
   }, [status, session]);
 
+  // Función auxiliar para mostrar el estado en español
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "open":
@@ -65,6 +75,7 @@ export default function ClientTicketsPage() {
     }
   };
 
+  // Función auxiliar para mostrar la prioridad en español
   const getPriorityLabel = (priority: string) => {
     switch (priority) {
       case "low":
@@ -80,6 +91,7 @@ export default function ClientTicketsPage() {
 
   return (
     <div>
+      {/* Encabezado con título y botón para crear nuevo ticket */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Mis Tickets de Soporte</h1>
         <Link
@@ -90,6 +102,7 @@ export default function ClientTicketsPage() {
         </Link>
       </div>
 
+      {/* Filtro por estado */}
       <div className="mb-4 flex gap-2 items-center">
         <label className="text-sm font-medium">Filtrar por estado:</label>
         <select
