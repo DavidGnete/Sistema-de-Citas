@@ -1,3 +1,5 @@
+// Cliente HTTP: configurar axios para llamar a los endpoints de la API.
+// Servicios: `ticketService` y `commentService` ofrecen funciones para usar la API.
 import axios from "axios";
 
 const api = axios.create({

@@ -1,3 +1,6 @@
+// Modelo `newuser`: define los campos del usuario y sus tipos.
+// Uso: guardar y leer usuarios en la base de datos.
+// Nota: el nombre del modelo es `newuser` y lo usan otros archivos.
 import mongoose, {Document, Model} from "mongoose";
 
 export interface IUser extends Document {  /* parte necesaria para typescript */

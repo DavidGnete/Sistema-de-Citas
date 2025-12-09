@@ -5,7 +5,12 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { ToastContainer, toast } from "react-toastify";
 
+// Paso 1: recibir `ticket` como prop y guardarlo en estado local `current`.
+// Paso 2: mostrar información del ticket (titulo, descripción, creador, fechas).
+// Paso 3: permitir editar estado, prioridad y asignado usando select/input.
+// Paso 4: al cambiar algo, llamar a la API con `api.put` y actualizar `current`.
 export default function TicketDetailsClient({ ticket }: any) {
+  // Estado local con el ticket actual que se muestra y edita.
   const [current, setCurrent] = useState(ticket);
   const [loading, setLoading] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);

@@ -1,3 +1,4 @@
+// GET: devolver los comentarios de un ticket ordenados cronológicamente.
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongobd";
 import { Comment } from "@/models/comment";

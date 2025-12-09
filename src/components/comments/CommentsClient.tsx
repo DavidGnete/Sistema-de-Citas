@@ -4,12 +4,17 @@ import api from "@/services/api";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from "react-toastify";
 
+// Paso 1: cargar los comentarios del ticket desde `/api/comments/:ticketId`.
+// Paso 2: refrescar cada 3 segundos para ver nuevos comentarios.
+// Paso 3: permitir enviar un nuevo comentario (usa la sesión para el autor).
+// Paso 4: después de enviar, limpiar el input y recargar la lista.
 export default function CommentsClient({ ticketId }: { ticketId: string }) {
   const [comments, setComments] = useState<any[]>([]);
   const [message, setMessage] = useState("");
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
 
+  // Función: pedir comentarios al servidor y guardarlos en estado.
   const fetchComments = async () => {
     try {
       const res = await api.get(`/api/comments/${ticketId}`);
@@ -21,15 +26,16 @@ export default function CommentsClient({ ticketId }: { ticketId: string }) {
   };
 
   useEffect(() => {
+    // Paso: cargar los comentarios al montar y comenzar el polling.
     fetchComments();
-    // Poll comentarios cada 3 segundos para nuevas respuestas
     const interval = setInterval(fetchComments, 3000);
     return () => clearInterval(interval);
   }, [ticketId]);
 
+  // Función: enviar un comentario nuevo al endpoint POST /api/comments.
   const addComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!message.trim()) {
       toast.error("Por favor escribe un comentario");
       return;
@@ -44,6 +50,7 @@ export default function CommentsClient({ ticketId }: { ticketId: string }) {
       };
       const res = await api.post(`/api/comments`, body);
       if (res.data?.ok) {
+        // Paso: si se guardó, limpiar input y recargar comentarios.
         setMessage("");
         toast.success("Comentario agregado");
         await fetchComments();
@@ -61,7 +68,7 @@ export default function CommentsClient({ ticketId }: { ticketId: string }) {
   return (
     <div className="p-6 bg-white rounded shadow">
       <h3 className="text-xl font-bold mb-4">Comentarios</h3>
-      
+
       <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
         {comments.length === 0 ? (
           <p className="text-gray-500 text-sm">No hay comentarios aún.</p>

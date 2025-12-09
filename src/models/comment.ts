@@ -1,3 +1,5 @@
+// Modelo `Comment`: define los campos del comentario y la referencia al ticket.
+// Uso: guardar comentarios y mostrarlos en la vista del ticket.
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 
 export interface IComment extends Document {

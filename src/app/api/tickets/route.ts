@@ -1,3 +1,5 @@
+// GET: listar tickets (filtros: status, priority, userId).
+// POST: crear ticket; valida campos obligatorios y guarda en la base.
 import { NextResponse } from "next/server";
 import { Ticket } from "@/models/ticket";
 import { connectToDatabase } from "@/lib/mongobd";

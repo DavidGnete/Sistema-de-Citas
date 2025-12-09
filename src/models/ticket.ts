@@ -1,3 +1,5 @@
+// Modelo `Ticket`: define los campos de un ticket (title, description, estado, prioridad).
+// Uso: crear, actualizar y listar tickets en la base de datos.
 import mongoose, { Document, Model, Schema, Types } from "mongoose";
 
 export interface ITicket extends Document {

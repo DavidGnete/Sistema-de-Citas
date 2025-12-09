@@ -1,3 +1,4 @@
+// POST: crear comentario para un ticket; validar campos y verificar existencia del ticket.
 import { NextResponse } from "next/server";
 import { connectToDatabase} from "@/lib/mongobd";
 import { Comment } from "@/models/comment";

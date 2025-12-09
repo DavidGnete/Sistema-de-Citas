@@ -31,7 +31,7 @@ export default async function AgentLayout({
     <div className="flex flex-col min-h-screen">
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Panel de Agente de Soporte</h2>
+          <h2 className="text-lg font-bold">Clinica Riwi</h2>
           <nav className="flex gap-6 items-center">
             <Link
               className="text-sm text-blue-600 hover:underline"
