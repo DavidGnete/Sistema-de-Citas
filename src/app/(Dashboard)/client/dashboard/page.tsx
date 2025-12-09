@@ -5,7 +5,7 @@ import { Ticket as TicketModel } from "@/models/ticket";
 import { connectToDatabase } from "@/lib/mongobd";
 
 export default async function ClientDashboardPage() {
-  const session = await getServerSession(authOptions as any);
+  const session = (await getServerSession(authOptions as any)) as any;
   if (!session) return redirect("/login");
 
   const userId = (session.user as any)?.id;

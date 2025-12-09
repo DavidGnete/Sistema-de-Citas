@@ -17,11 +17,14 @@ interface DashboardLayoutprops {
 export default async function AgentLayout({
   children,
 }: DashboardLayoutprops) {
-  const session = await getServerSession(authOptions as any);
+  const session = (await getServerSession(authOptions as any)) as any;
 
   if (!session) return redirect("/login");
 
-  const role = (session.user as any)?.role || "client";
+ const role = session?.user && "role" in session.user
+  ? (session.user as any).role
+  : "client";
+
   if (role !== "agent") return redirect("/");
 
   return (

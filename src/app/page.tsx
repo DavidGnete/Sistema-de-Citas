@@ -3,7 +3,7 @@ import { authOptions } from "@/models/auth";
 import { redirect } from "next/navigation";
 
 export default async function RootPage() {
-  const session = await getServerSession(authOptions as any);
+  const session = (await getServerSession(authOptions as any)) as any;
 
   if (!session) {
     return redirect("/login");

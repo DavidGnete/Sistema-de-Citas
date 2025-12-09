@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default async function ClientTicketPage({ params }: Props) {
-  const session = await getServerSession(authOptions as any);
+  const session = (await getServerSession(authOptions as any)) as any;
   if (!session) return redirect("/login");
 
   const { id } = await params;
